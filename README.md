@@ -35,31 +35,38 @@ jsonworker: bench jsonworker --queue kafka_events --numworkers 2
 2. Production Mode - Starting Frappe using Supervisor, add the following to supervisor.conf
 <pre>
 [program:frappe-bench-eventdispatcher]
-command=/home/frappe/frappe-bench/env/bin/bench eventdispatcher --queue kafka_events
+command=/usr/local/bin/bench eventdispatcher --queue kafka_events
 priority=4
 autostart=true
 autorestart=true
 stdout_logfile=/home/frappe/frappe-bench/logs/eventdispatcher.log
 stderr_logfile=/home/frappe/frappe-bench/logs/eventdispatcher.error.log
 user=frappe
-directory=/home/frappe/<frappe>-bench
 numprocs=1
+directory=/home/frappe/frappe-bench
 process_name=%(program_name)s-%(process_num)d
 stopasgroup=true
 stopsignal=QUIT
-
+startretries=3
 
 [program:frappe-bench-jsonworker]
-command=/home/frappe/frappe-bench/env/bin/bench jsonworker --queue kafka_events
+command=/usr/local/bin/bench jsonworker --queue kafka_events
 priority=4
 autostart=true
 autorestart=true
 stdout_logfile=/home/frappe/frappe-bench/logs/jsonworker.log
 stderr_logfile=/home/frappe/frappe-bench/logs/jsonworker.error.log
 user=frappe
-directory=/home/frappe/frappe-bench
 numprocs=1
+directory=/home/frappe/frappe-bench
 process_name=%(program_name)s-%(process_num)d
+stopasgroup=true
+stopsignal=QUIT
+startretries=3
+    
+
+[group:frappe-bench-workers]
+programs=frappe-bench-frappe-schedule,frappe-bench-frappe-short-worker,frappe-bench-frappe-long-worker,frappe-bench-eventdispatcher,frappe-bench-jsonworker
 </pre>
 Add, the above programs to the group of bench and reload supervisor.q
 
