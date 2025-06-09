@@ -35,7 +35,7 @@ jsonworker: bench jsonworker --queue kafka_events --numworkers 2
 2. Production Mode - Starting Frappe using Supervisor, add the following to supervisor.conf
 <pre>
 [program:frappe-bench-eventdispatcher]
-command=/home/frappe/frappe-bench/bench eventdispatcher --queue kafka_events
+command=/home/frappe/frappe-bench/env/bin/bench eventdispatcher --queue kafka_events
 priority=4
 autostart=true
 autorestart=true
@@ -50,7 +50,7 @@ stopsignal=QUIT
 
 
 [program:frappe-bench-jsonworker]
-command=/home/frappe/frappe-bench/bench jsonworker --queue kafka_events
+command=/home/frappe/frappe-bench/env/bin/bench jsonworker --queue kafka_events
 priority=4
 autostart=true
 autorestart=true
